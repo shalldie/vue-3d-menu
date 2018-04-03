@@ -8,7 +8,6 @@ Vue.config.productionTip = false
 import Vue3dMenu from './Vue3dMenu';
 Vue.use(Vue3dMenu);
 
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

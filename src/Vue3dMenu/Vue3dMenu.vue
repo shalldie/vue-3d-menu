@@ -5,12 +5,14 @@
 </template>
 
 <script>
-// import Animate from './lib/Animate';
+import ItemInfo from './models/ItemInfo';
 
 export default {
 
     props: {
-
+        items: {
+            type: Array
+        }
     },
 
     data() {
@@ -20,7 +22,16 @@ export default {
     },
 
     computed: {
-
+        itemInfo() {
+            let resultItem;
+            for (let i = this.items.length - 1; i >= 0; i--) {
+                let { title, click } = this.items[i];
+                let item = new ItemInfo(title, click);
+                item.next = resultItem;
+                resultItem = item;
+            }
+            return resultItem;
+        }
     },
 
     methods: {
