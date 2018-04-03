@@ -14,7 +14,7 @@ export default class ItemInfo {
      */
     constructor(title, click = function () { }) {
         this.title = title;
-        this.next = next;
+        this.click = click;
     }
 
     /**
