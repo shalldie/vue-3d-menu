@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-    <vue-3d-menu title="试听&咨询" :items="items"></vue-3d-menu>
+    <vue-3d-menu title="3D & 菜单" :items="items"></vue-3d-menu>
 </div>
 </template>
 

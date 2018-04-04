@@ -37,9 +37,21 @@ export default {
                 let { title, click } = this.items[i];
                 let item = new ItemInfo(title, click);
                 item.next = resultItem;
+                if (resultItem) {
+                    resultItem.prev = item;
+                }
                 resultItem = item;
             }
             return resultItem;
+        },
+        itemList() {
+            let list = [];
+            let itemInfo = this.itemInfo;
+            while (itemInfo) {
+                list.push(itemInfo);
+                itemInfo = itemInfo.next;
+            }
+            return list;
         }
     },
 
@@ -61,7 +73,29 @@ export default {
     },
 
     created() {
+        // let i = 0;
+        // let itemInfo = this.itemInfo;
+        // // console.log(itemInfo);
 
+        // while (itemInfo) {
+        //     console.log('while');
+        //     let temp = itemInfo;
+        //     setTimeout(() => {
+        //         console.log(temp.vm);
+        //         temp.vm.goUp();
+        //     }, 1000 * 12 - 1000 * i++);
+
+        //     itemInfo = itemInfo.next;
+        // }
+        console.log('created');
+        this.$nextTick(async () => {
+            console.log('nexttick');
+            for (let i = this.itemList.length - 1; i >= 0; i--) {
+                let item = this.itemList[i];
+                await item.vm.goUp();
+            }
+        });
+        window.ele = this.itemList[this.itemList.length - 1];
     },
 
     components: {
@@ -83,7 +117,7 @@ export default {
     .menu-wrap {
         perspective: 800px;
         transform-style: preserve-3d;
-        transition: 0.233s;
+        // transition: 0.1s;
         background: url(./assets/topMenu.png) no-repeat;
 
         .vue-3d-menu-title {

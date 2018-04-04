@@ -34,6 +34,14 @@ export default class ItemInfo {
     click
 
     /**
+     * 上一个节点
+     * 
+     * @type {ItemInfo}
+     * @memberof ItemInfo
+     */
+    prev = null
+
+    /**
      * 下一个节点
      * 
      * @type {ItemInfo}
@@ -41,4 +49,11 @@ export default class ItemInfo {
      */
     next = null
 
+    /**
+     * 对应的 VueComponent 对象
+     * 
+     * @type {VueComponent}
+     * @memberof ItemInfo
+     */
+    vm = null
 }
