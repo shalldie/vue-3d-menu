@@ -46,12 +46,13 @@ export default {
         handleMove({ offsetX }) {
             let offset = (offsetX - 146 / 2) * 0.5;
             this.setOffsetY(offset);
-
         },
-        handleEnter() {
-            // this.itemList[0].vm.goDown();
+        async handleEnter() {
+            await this.waitForStop();
+            this.itemList[0].vm.goDown();
         },
-        handleLeave() {
+        async handleLeave() {
+            await this.waitForStop();
             this.itemList[this.itemList.length - 1].vm.goUp();
         },
         setOffsetY(offsetY) {
@@ -59,6 +60,9 @@ export default {
                 .map(prev => `${prev}transform:rotate3d(0,1,0,${offsetY}deg);`)
                 .join('');
             this.$refs.menu.style.cssText = styleContent;
+        },
+        waitForStop() {
+            return Promise.all(this.itemList.map(item => item.vm.stop()));
         }
     },
 
@@ -85,7 +89,7 @@ export default {
             //     let item = this.itemList[i];
             //     await item.vm.goUp();
             // }
-            this.itemList[this.itemList.length - 1].vm.goUp();
+            // this.itemList[this.itemList.length - 1].vm.goUp();
         });
         window.list = this.itemList;
     },
@@ -110,6 +114,7 @@ export default {
         transform-style: preserve-3d;
         // transition: 0.1s;
         z-index: 999;
+        transform: rotateY(-40deg);
 
         .vue-3d-menu-title {
             background: url(./assets/topMenu.png) no-repeat;

@@ -12,8 +12,8 @@ import Tween from './lib/Tween';
 
 const upDuration = 300;
 const upInvokeNum = -90;
-const downDuration = 800;
-const downInvokeNum = 120;
+const downDuration = 1000;
+const downInvokeNum = -90;
 
 export default {
 
@@ -57,10 +57,13 @@ export default {
             let hasInvoked = false;
             this.animate = new Animate(-180, 0, downDuration, num => {
                 if (num > downInvokeNum && !hasInvoked) {
+                    console.log(num);
                     hasInvoked = true;
                     this.itemInfo.next && this.itemInfo.next.vm.goDown();
                 }
+                this.setRotateStyle(num);
             }, () => dfd.resolve());
+            this.animate.tween = Tween.BackEaseOut;
             this.animate.start();
             return dfd.promise;
         },
@@ -86,6 +89,7 @@ export default {
     font-size: 0;
     transform-origin: center top;
     transform-style: preserve-3d;
+    transform: rotateX(-180deg);
 
     .menu-item-title {
         width: 100%;
