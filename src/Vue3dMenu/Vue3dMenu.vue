@@ -1,8 +1,8 @@
 <template>
 <div class="vue-3d-menu">
-    <div ref="menu" @mousemove="handleMove" @mouseout="handleOut" class="menu-wrap">
+    <div ref="menu" @mousemove="handleMove" @mouseenter="handleEnter" @mouseleave="handleLeave" class="menu-wrap">
         <div class="vue-3d-menu-title">{{title}}</div>
-        <menu-item :itemInfo="itemInfo"></menu-item>
+        <menu-item :itemInfo="itemList[0]"></menu-item>
     </div>
 </div>
 </template>
@@ -31,26 +31,13 @@ export default {
     },
 
     computed: {
-        itemInfo() {
-            let resultItem;
-            for (let i = this.items.length - 1; i >= 0; i--) {
-                let { title, click } = this.items[i];
-                let item = new ItemInfo(title, click);
-                item.next = resultItem;
-                if (resultItem) {
-                    resultItem.prev = item;
-                }
-                resultItem = item;
-            }
-            return resultItem;
-        },
         itemList() {
-            let list = [];
-            let itemInfo = this.itemInfo;
-            while (itemInfo) {
-                list.push(itemInfo);
-                itemInfo = itemInfo.next;
-            }
+            let list = this.items.map(({ title, click }) => new ItemInfo(title, click));
+            list.reduce((prev, current) => {
+                prev && (prev.next = current);
+                current && (current.prev = prev);
+                return current;
+            });
             return list;
         }
     },
@@ -61,8 +48,11 @@ export default {
             this.setOffsetY(offset);
 
         },
-        handleOut() {
-            // this.setOffsetY(0);
+        handleEnter() {
+            // this.itemList[0].vm.goDown();
+        },
+        handleLeave() {
+            this.itemList[this.itemList.length - 1].vm.goUp();
         },
         setOffsetY(offsetY) {
             let styleContent = ['-ms-', '-o-', '-moz-', '-webkit-', '']   // 浏览器前缀
@@ -73,6 +63,7 @@ export default {
     },
 
     created() {
+        console.log(this.itemList);
         // let i = 0;
         // let itemInfo = this.itemInfo;
         // // console.log(itemInfo);
@@ -87,15 +78,16 @@ export default {
 
         //     itemInfo = itemInfo.next;
         // }
-        console.log('created');
+        // console.log('created');
         this.$nextTick(async () => {
-            console.log('nexttick');
-            for (let i = this.itemList.length - 1; i >= 0; i--) {
-                let item = this.itemList[i];
-                await item.vm.goUp();
-            }
+            // console.log('nexttick');
+            // for (let i = this.itemList.length - 1; i >= 0; i--) {
+            //     let item = this.itemList[i];
+            //     await item.vm.goUp();
+            // }
+            this.itemList[this.itemList.length - 1].vm.goUp();
         });
-        window.ele = this.itemList[this.itemList.length - 1];
+        window.list = this.itemList;
     },
 
     components: {
@@ -115,18 +107,20 @@ export default {
     transform-style: preserve-3d;
 
     .menu-wrap {
-        perspective: 800px;
         transform-style: preserve-3d;
         // transition: 0.1s;
-        background: url(./assets/topMenu.png) no-repeat;
+        z-index: 999;
 
         .vue-3d-menu-title {
+            background: url(./assets/topMenu.png) no-repeat;
+            transform: translateZ(1px);
             padding-top: 18px;
             line-height: 36px;
             text-indent: 50px;
             font-size: 16px;
             color: #fff;
             font-weight: bold;
+            z-index: 999;
         }
     }
 }

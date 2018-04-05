@@ -10,6 +10,11 @@ import Animate from './lib/Animate';
 import Deferred from './lib/Deferred';
 import Tween from './lib/Tween';
 
+const upDuration = 300;
+const upInvokeNum = -90;
+const downDuration = 800;
+const downInvokeNum = 120;
+
 export default {
 
     name: 'menu-item',
@@ -22,41 +27,48 @@ export default {
 
     data() {
         return {
-            duration: 300,
-            animate: null
+            animate: null,
+            disabled: false
         };
     },
 
     methods: {
-        async waitStop() {
+        async stop() {
             if (this.animate) {
                 await this.animate.deferred.promise;
             }
+            this.disabled = false;
         },
-        async goUp() {
-            await this.waitStop();
-            console.log('go up');
-            await this.startAnimate(0, -180);
-        },
-        async goDown() {
-            await this.waitStop();
-            this.startAnimate(-180, 0);
-        },
-        startAnimate(from, to) {
-            if (this.animate) {
-                this.animate.stop();
-            }
-
+        goUp() {
             let dfd = new Deferred();
-            this.animate = new Animate(from, to, this.duration, num => {
-                let styleContent = ['-ms-', '-o-', '-moz-', '-webkit-', '']   // 浏览器前缀
-                    .map(prev => `${prev}transform:rotate3d(1,0,0,${num}deg);`)
-                    .join('');
-                this.$el.style.cssText = styleContent;
+            let hasInvoked = false;
+            this.animate = new Animate(0, -180, upDuration, num => {
+                if (num < upInvokeNum && !hasInvoked) {
+                    hasInvoked = true;
+                    this.itemInfo.prev && this.itemInfo.prev.vm.goUp();
+                }
+                this.setRotateStyle(num);
             }, () => dfd.resolve());
-            this.animate.tween = Tween.Linear;
             this.animate.start();
             return dfd.promise;
+        },
+        goDown() {
+            let dfd = new Deferred();
+            let hasInvoked = false;
+            this.animate = new Animate(-180, 0, downDuration, num => {
+                if (num > downInvokeNum && !hasInvoked) {
+                    hasInvoked = true;
+                    this.itemInfo.next && this.itemInfo.next.vm.goDown();
+                }
+            }, () => dfd.resolve());
+            this.animate.start();
+            return dfd.promise;
+        },
+        setRotateStyle(rotate) {
+            let styleContent = ['-ms-', '-o-', '-moz-', '-webkit-', '']   // 浏览器前缀
+                .map(prev => `${prev}transform:rotate3d(1,0,0,${rotate}deg);`)
+                .join('');
+            this.$el.style.cssText = styleContent;
         }
     },
 
@@ -87,6 +99,7 @@ export default {
         font-weight: normal;
         margin-top: 1px;
         cursor: pointer;
+        z-index: 9;
 
         &:hover {
             color: #fff;
