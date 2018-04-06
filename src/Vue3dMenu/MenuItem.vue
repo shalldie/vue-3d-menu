@@ -1,6 +1,6 @@
 <template>
 <div class="menu-item">
-    <div class="menu-item-title">{{itemInfo.title}}</div>
+    <div :class="{'menu-item-title':true,shadow:shadow}">{{itemInfo.title}}</div>
     <menu-item v-if="itemInfo.next" :itemInfo="itemInfo.next"></menu-item>
 </div>
 </template>
@@ -9,11 +9,6 @@
 import Animate from './lib/Animate';
 import Deferred from './lib/Deferred';
 import Tween from './lib/Tween';
-
-const upDuration = 300;
-const upInvokeNum = -90;
-const downDuration = 1000;
-const downInvokeNum = -90;
 
 export default {
 
@@ -27,46 +22,11 @@ export default {
 
     data() {
         return {
-            animate: null,
-            disabled: false
+            shadow: false
         };
     },
 
     methods: {
-        async stop() {
-            if (this.animate) {
-                await this.animate.deferred.promise;
-            }
-            this.disabled = false;
-        },
-        goUp() {
-            let dfd = new Deferred();
-            let hasInvoked = false;
-            this.animate = new Animate(0, -180, upDuration, num => {
-                if (num < upInvokeNum && !hasInvoked) {
-                    hasInvoked = true;
-                    this.itemInfo.prev && this.itemInfo.prev.vm.goUp();
-                }
-                this.setRotateStyle(num);
-            }, () => dfd.resolve());
-            this.animate.start();
-            return dfd.promise;
-        },
-        goDown() {
-            let dfd = new Deferred();
-            let hasInvoked = false;
-            this.animate = new Animate(-180, 0, downDuration, num => {
-                if (num > downInvokeNum && !hasInvoked) {
-                    console.log(num);
-                    hasInvoked = true;
-                    this.itemInfo.next && this.itemInfo.next.vm.goDown();
-                }
-                this.setRotateStyle(num);
-            }, () => dfd.resolve());
-            this.animate.tween = Tween.BackEaseOut;
-            this.animate.start();
-            return dfd.promise;
-        },
         setRotateStyle(rotate) {
             let styleContent = ['-ms-', '-o-', '-moz-', '-webkit-', '']   // 浏览器前缀
                 .map(prev => `${prev}transform:rotate3d(1,0,0,${rotate}deg);`)
@@ -76,7 +36,14 @@ export default {
     },
 
     created() {
-        this.itemInfo.vm = this;
+        this.itemInfo.onUpdate = num => {
+            this.setRotateStyle(num);
+            if (num < -60) {
+                this.shadow = true;
+                return;
+            }
+            this.shadow = false;
+        }
     }
 
 };
@@ -104,6 +71,11 @@ export default {
         margin-top: 1px;
         cursor: pointer;
         z-index: 9;
+        transition: 0.1s;
+
+        &.shadow {
+            background-color: rgb(223, 223, 223);
+        }
 
         &:hover {
             color: #fff;

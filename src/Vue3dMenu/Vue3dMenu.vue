@@ -1,6 +1,7 @@
 <template>
 <div class="vue-3d-menu">
-    <div ref="menu" @mousemove="handleMove" @mouseenter="handleEnter" @mouseleave="handleLeave" class="menu-wrap">
+    <div ref="menu" 
+        class="menu-wrap">
         <div class="vue-3d-menu-title">{{title}}</div>
         <menu-item :itemInfo="itemList[0]"></menu-item>
     </div>
@@ -9,7 +10,8 @@
 
 <script>
 import MenuItem from "./MenuItem";
-import ItemInfo from './models/ItemInfo';
+import ItemInfo from './lib/ItemInfo';
+import Rotate from './lib/Rotate';
 
 export default {
 
@@ -90,6 +92,8 @@ export default {
             //     await item.vm.goUp();
             // }
             // this.itemList[this.itemList.length - 1].vm.goUp();
+            let rotate = new Rotate(this.itemList);
+            rotate.goDown();
         });
         window.list = this.itemList;
     },
