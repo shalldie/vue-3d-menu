@@ -1,6 +1,6 @@
 <template>
 <div class="menu-item">
-    <div :class="{'menu-item-title':true,shadow:shadow}">{{itemInfo.title}}</div>
+    <div :class="{'menu-item-title':true,shadow:shadow}" @click="itemInfo.click">{{itemInfo.title}}</div>
     <menu-item v-if="itemInfo.next" :itemInfo="itemInfo.next"></menu-item>
 </div>
 </template>
@@ -22,7 +22,8 @@ export default {
 
     data() {
         return {
-            shadow: false
+            shadow: false,
+            hidden: false
         };
     },
 
@@ -40,9 +41,10 @@ export default {
             this.setRotateStyle(num);
             if (num < -60) {
                 this.shadow = true;
-                return;
             }
-            this.shadow = false;
+            else {
+                this.shadow = false;
+            }
         }
     }
 
@@ -75,6 +77,10 @@ export default {
 
         &.shadow {
             background-color: rgb(223, 223, 223);
+        }
+
+        &.hidden {
+            backface-visibility: hidden;
         }
 
         &:hover {

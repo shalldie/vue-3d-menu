@@ -1,6 +1,9 @@
 <template>
 <div class="vue-3d-menu">
     <div ref="menu" 
+        @mouseenter="handleEnter"
+        @mouseleave="handleLeave"
+        @mousemove="handleMove"
         class="menu-wrap">
         <div class="vue-3d-menu-title">{{title}}</div>
         <menu-item :itemInfo="itemList[0]"></menu-item>
@@ -28,7 +31,7 @@ export default {
 
     data() {
         return {
-
+            rotate: null
         };
     },
 
@@ -49,53 +52,22 @@ export default {
             let offset = (offsetX - 146 / 2) * 0.5;
             this.setOffsetY(offset);
         },
-        async handleEnter() {
-            await this.waitForStop();
-            this.itemList[0].vm.goDown();
+        handleEnter() {
+            this.rotate.goDown();
         },
-        async handleLeave() {
-            await this.waitForStop();
-            this.itemList[this.itemList.length - 1].vm.goUp();
+        handleLeave() {
+            this.rotate.goUp();
         },
         setOffsetY(offsetY) {
             let styleContent = ['-ms-', '-o-', '-moz-', '-webkit-', '']   // 浏览器前缀
                 .map(prev => `${prev}transform:rotate3d(0,1,0,${offsetY}deg);`)
                 .join('');
             this.$refs.menu.style.cssText = styleContent;
-        },
-        waitForStop() {
-            return Promise.all(this.itemList.map(item => item.vm.stop()));
         }
     },
 
     created() {
-        console.log(this.itemList);
-        // let i = 0;
-        // let itemInfo = this.itemInfo;
-        // // console.log(itemInfo);
-
-        // while (itemInfo) {
-        //     console.log('while');
-        //     let temp = itemInfo;
-        //     setTimeout(() => {
-        //         console.log(temp.vm);
-        //         temp.vm.goUp();
-        //     }, 1000 * 12 - 1000 * i++);
-
-        //     itemInfo = itemInfo.next;
-        // }
-        // console.log('created');
-        this.$nextTick(async () => {
-            // console.log('nexttick');
-            // for (let i = this.itemList.length - 1; i >= 0; i--) {
-            //     let item = this.itemList[i];
-            //     await item.vm.goUp();
-            // }
-            // this.itemList[this.itemList.length - 1].vm.goUp();
-            let rotate = new Rotate(this.itemList);
-            rotate.goDown();
-        });
-        window.list = this.itemList;
+        this.rotate = new Rotate(this.itemList);
     },
 
     components: {
@@ -118,7 +90,7 @@ export default {
         transform-style: preserve-3d;
         // transition: 0.1s;
         z-index: 999;
-        transform: rotateY(-40deg);
+        transform: rotateY(-30deg);
 
         .vue-3d-menu-title {
             background: url(./assets/topMenu.png) no-repeat;

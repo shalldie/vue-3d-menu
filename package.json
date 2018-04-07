@@ -1,6 +1,6 @@
 {
   "name": "vue-3d-menu",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vue 的3d菜单组件。",
   "main": "dist/vue-3d-menu.js",
   "author": "shalldie",

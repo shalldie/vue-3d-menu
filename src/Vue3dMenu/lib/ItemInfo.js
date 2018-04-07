@@ -4,7 +4,7 @@ import Tween from './Tween';
 
 const upDuration = 300;
 const upInvokeNum = -90;
-const downDuration = 1000;
+const downDuration = 700;
 const downInvokeNum = -90;
 
 /**
@@ -59,14 +59,6 @@ export default class ItemInfo {
     next = null;
 
     /**
-     * 对应的 VueComponent 对象
-     * 
-     * @type {VueComponent}
-     * @memberof ItemInfo
-     */
-    vm = null;
-
-    /**
      * 数值更新的回调
      * 
      * @memberof ItemInfo
@@ -110,11 +102,15 @@ export default class ItemInfo {
      */
     goUp() {
         this.disabled = false;
+        if (!this.open) {
+            this.done = Promise.resolve();
+            this.prev && this.prev.goUp();
+            return;
+        }
         let dfd = new Deferred();
         this.done = dfd.promise;
         let hasInvoked = false;
-        let from = this.open ? 0 : -180;
-        this.animate = new Animate(from, -180, upDuration,
+        this.animate = new Animate(0, -180, upDuration,
             num => {
                 this.onUpdate(num);
                 if (num < upInvokeNum && !hasInvoked && !this.disabled) {
@@ -131,11 +127,15 @@ export default class ItemInfo {
 
     goDown() {
         this.disabled = false;
+        if (this.open) {
+            this.done = Promise.resolve();
+            this.next && this.next.goDown();
+            return;
+        }
         let dfd = new Deferred();
         this.done = dfd.promise;
         let hasInvoked = false;
-        let from = this.open ? 0 : -180;
-        this.animate = new Animate(from, 0, downDuration,
+        this.animate = new Animate(-180, 0, downDuration,
             num => {
                 this.onUpdate(num);
                 if (num > downInvokeNum && !hasInvoked && !this.disabled) {

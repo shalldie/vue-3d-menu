@@ -7,7 +7,19 @@
 <script>
 export default {
     data() {
-        let items = Array.apply(null, Array(10)).map((item, index) => ({ title: `第${index}项` }));
+        let items = [
+            '>_<#@!',
+            '(^(OO)^) ≡',
+            '^_^;',
+            '→_→',
+            '(＝^ω^＝)',
+            '…(⊙_⊙;)… ',
+            'O__O" ',
+            'O_o',
+            '（⊙o⊙）',
+            '（*>.<*）~'
+        ].map(item => ({ title: item, click: () => alert(item) }));
+
         return {
             items
         };
@@ -16,18 +28,22 @@ export default {
 </script>
 
 <style>
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+body {
+    background: #e8d0ca url(https://i.loli.net/2018/04/07/5ac8505922be2.jpg)
+        no-repeat;
+    background-position: center top;
+}
 #app {
+    float: right;
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* text-align: center; */
-    text-indent: 200px;
     color: #2c3e50;
-    margin-top: 60px;
-    box-shadow: 2px 2px 6px #999;
-    width: 600px;
-    height: 400px;
-    margin: 50px auto;
-    background: #e8d0ca;
+    margin-right: 50px;
 }
 </style>
