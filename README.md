@@ -2,6 +2,8 @@
 
 > Vue 的3d菜单组件。
 
+效果参照2013版miaov官网右上角菜单。
+
 ## Examples
 ![vue-3d-menu](https://user-images.githubusercontent.com/9987486/38456467-918f76d2-3ab7-11e8-841e-04c2a51c765e.gif)
 
