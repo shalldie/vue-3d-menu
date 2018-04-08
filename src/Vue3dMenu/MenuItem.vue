@@ -22,8 +22,7 @@ export default {
 
     data() {
         return {
-            shadow: false,
-            hidden: false
+            shadow: false
         };
     },
 
