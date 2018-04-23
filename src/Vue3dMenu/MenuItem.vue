@@ -1,8 +1,8 @@
 <template>
-<div class="menu-item">
-    <div :class="{'menu-item-title':true,shadow:shadow}" @click="itemInfo.click">{{itemInfo.title}}</div>
-    <menu-item v-if="itemInfo.next" :itemInfo="itemInfo.next"></menu-item>
-</div>
+    <div class="menu-item" :style="{transform:transform}">
+        <div :class="{'menu-item-title':true,shadow:shadow}" @click="itemInfo.click">{{itemInfo.title}}</div>
+        <menu-item v-if="itemInfo.next" :itemInfo="itemInfo.next"></menu-item>
+    </div>
 </template>
 
 <script>
@@ -22,22 +22,14 @@ export default {
 
     data() {
         return {
-            shadow: false
+            shadow: false,
+            transform: 'rotateX(-180deg)'
         };
-    },
-
-    methods: {
-        setRotateStyle(rotate) {
-            let styleContent = ['-ms-', '-o-', '-moz-', '-webkit-', '']   // 浏览器前缀
-                .map(prev => `${prev}transform:rotate3d(1,0,0,${rotate}deg);`)
-                .join('');
-            this.$el.style.cssText = styleContent;
-        }
     },
 
     created() {
         this.itemInfo.onUpdate = num => {
-            this.setRotateStyle(num);
+            this.transform = `rotate3d(1,0,0,${num}deg)`;
             if (num < -60) {
                 this.shadow = true;
             }
@@ -57,7 +49,6 @@ export default {
     font-size: 0;
     transform-origin: center top;
     transform-style: preserve-3d;
-    transform: rotateX(-180deg);
 
     .menu-item-title {
         width: 100%;
