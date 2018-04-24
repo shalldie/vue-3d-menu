@@ -1,14 +1,10 @@
 <template>
-<div class="vue-3d-menu">
-    <div ref="menu" 
-        @mouseenter="handleEnter"
-        @mouseleave="handleLeave"
-        @mousemove="handleMove"
-        class="menu-wrap">
-        <div class="vue-3d-menu-title">{{title}}</div>
-        <menu-item :itemInfo="itemList[0]"></menu-item>
+    <div class="vue-3d-menu">
+        <div :style="{transform:`rotate3d(0,1,0,${offsetY}deg)`}" @mouseenter="handleEnter" @mouseleave="handleLeave" @mousemove="handleMove" class="menu-wrap">
+            <div class="vue-3d-menu-title">{{title}}</div>
+            <menu-item :itemInfo="itemList[0]"></menu-item>
+        </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -31,6 +27,7 @@ export default {
 
     data() {
         return {
+            offsetY: 0,
             rotate: null
         };
     },
@@ -50,19 +47,13 @@ export default {
     methods: {
         handleMove({ offsetX }) {
             let offset = (offsetX - 146 / 2) * 0.5;
-            this.setOffsetY(offset);
+            this.offsetY = offset;
         },
         handleEnter() {
             this.rotate.goDown();
         },
         handleLeave() {
             this.rotate.goUp();
-        },
-        setOffsetY(offsetY) {
-            let styleContent = ['-ms-', '-o-', '-moz-', '-webkit-', '']   // 浏览器前缀
-                .map(prev => `${prev}transform:rotate3d(0,1,0,${offsetY}deg);`)
-                .join('');
-            this.$refs.menu.style.cssText = styleContent;
         }
     },
 
@@ -88,7 +79,6 @@ export default {
 
     .menu-wrap {
         transform-style: preserve-3d;
-        // transition: 0.1s;
         z-index: 999;
         transform: rotateY(-30deg);
 
