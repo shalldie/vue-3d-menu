@@ -28,6 +28,7 @@ module.exports = {
     path: config.build.assetsRoot,
     filename: '[name].js',
     library: 'Vue3dMenu',
+    libraryExport: 'default',
     libraryTarget: utils.ifProduction() ? 'umd' : undefined,
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath

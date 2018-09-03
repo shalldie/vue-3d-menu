@@ -6,7 +6,7 @@ import Queue from './Queue';
 
 /**
  * 翻转逻辑类
- * 
+ *
  * @export
  * @class Rotate
  */
@@ -22,14 +22,14 @@ export default class Rotate {
 
     /**
      * 下一步操作的队列
-     * 
+     *
      * @memberof Rotate
      */
     queue = new Queue();
 
     /**
      * Creates an instance of Rotate.
-     * @param {Array<ItemList>} itemList 
+     * @param {Array<ItemList>} itemList
      * @memberof Rotate
      */
     constructor(itemList) {
@@ -38,7 +38,7 @@ export default class Rotate {
 
     /**
      * 上卷
-     * 
+     *
      * @memberof Rotate
      */
     goUp() {
@@ -47,7 +47,7 @@ export default class Rotate {
 
     /**
      * 下卷
-     * 
+     *
      * @memberof Rotate
      */
     goDown() {
@@ -56,15 +56,15 @@ export default class Rotate {
 
     /**
      * 向队列添加某个操作，覆盖之前的行为
-     * 
-     * @param {Function} fn 
+     *
+     * @param {Function} fn
      * @memberof Rotate
      */
-    async attach(fn) {
+    attach(fn) {
         this.queue.clear();
         this.queue.add(fn);
-        await Promise.all(this.itemList.map(item => item.stop()));
-        this.queue.dequeue();
+        Promise.all(this.itemList.map(item => item.stop()))
+            .then(() => this.queue.dequeue());
     }
 
 }
